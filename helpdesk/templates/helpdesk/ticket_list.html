@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}Заявки — Служба заявок{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="mb-0">{% if user.is_agent %}Все заявки{% else %}Мои заявки{% endif %}</h3>
+    <a href="{% url 'ticket_create' %}" class="btn btn-primary">+ Новая заявка</a>
+</div>
+
+<form method="get" class="row g-2 mb-3">
+    <div class="col-md-4">
+        <input type="text" name="q" value="{{ query }}" class="form-control" placeholder="Поиск по теме или описанию">
+    </div>
+    <div class="col-md-3">
+        <select name="status" class="form-select">
+            <option value="">— все статусы —</option>
+            {% for s in statuses %}
+                <option value="{{ s.id }}" {% if current_status == s.id|stringformat:'s' %}selected{% endif %}>{{ s.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-md-3">
+        <select name="category" class="form-select">
+            <option value="">— все категории —</option>
+            {% for c in categories %}
+                <option value="{{ c.id }}" {% if current_category == c.id|stringformat:'s' %}selected{% endif %}>{{ c.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-md-2">
+        <button type="submit" class="btn btn-outline-secondary w-100">Фильтр</button>
+    </div>
+</form>
+
+<div class="card shadow-sm">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>#</th>
+                    <th>Тема</th>
+                    <th>Категория</th>
+                    <th>Статус</th>
+                    <th>Приоритет</th>
+                    {% if user.is_agent %}<th>Автор</th><th>Исполнитель</th>{% endif %}
+                    <th>Создана</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ticket in tickets %}
+                    <tr onclick="window.location='{% url 'ticket_detail' ticket.pk %}'" style="cursor:pointer">
+                        <td>{{ ticket.pk }}</td>
+                        <td>{{ ticket.title }}</td>
+                        <td>{{ ticket.category.name }}</td>
+                        <td><span class="badge bg-info text-dark">{{ ticket.status.name }}</span></td>
+                        <td>{{ ticket.priority.name }}</td>
+                        {% if user.is_agent %}
+                            <td>{{ ticket.author }}</td>
+                            <td>{{ ticket.assignee|default:"—" }}</td>
+                        {% endif %}
+                        <td class="text-nowrap small text-muted">{{ ticket.created_at|date:"d.m.Y H:i" }}</td>
+                    </tr>
+                {% empty %}
+                    <tr><td colspan="8" class="text-center text-muted py-4">Заявок пока нет</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

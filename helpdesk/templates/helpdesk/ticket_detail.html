@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block title %}Заявка #{{ ticket.pk }} — Служба заявок{% endblock %}
+{% block content %}
+<a href="{% url 'ticket_list' %}" class="btn btn-link px-0 mb-2">← К списку заявок</a>
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card shadow-sm mb-3">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start">
+                    <h4 class="mb-1">#{{ ticket.pk }} {{ ticket.title }}</h4>
+                    <span class="badge bg-info text-dark fs-6">{{ ticket.status.name }}</span>
+                </div>
+                <p class="text-muted small mb-3">
+                    Автор: {{ ticket.author }} · {{ ticket.created_at|date:"d.m.Y H:i" }}
+                </p>
+                <p style="white-space: pre-line">{{ ticket.description }}</p>
+                {% if ticket.tags.all %}
+                    <div class="mt-2">
+                        {% for tag in ticket.tags.all %}<span class="badge bg-secondary">{{ tag.name }}</span> {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <h5>Переписка</h5>
+        {% for comment in comments %}
+            <div class="card mb-2 {% if comment.is_internal %}border-warning{% endif %}">
+                <div class="card-body py-2">
+                    <div class="d-flex justify-content-between">
+                        <strong>{{ comment.author }}</strong>
+                        <span class="small text-muted">{{ comment.created_at|date:"d.m.Y H:i" }}</span>
+                    </div>
+                    {% if comment.is_internal %}<span class="badge bg-warning text-dark">Внутренний</span>{% endif %}
+                    <div style="white-space: pre-line">{{ comment.body }}</div>
+                </div>
+            </div>
+        {% empty %}
+            <p class="text-muted">Комментариев пока нет.</p>
+        {% endfor %}
+
+        <div class="card shadow-sm mt-3">
+            <div class="card-body">
+                <h6>Добавить комментарий</h6>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-2">{{ comment_form.body }}</div>
+                    {% if comment_form.is_internal %}
+                        <div class="form-check mb-2">
+                            {{ comment_form.is_internal }}
+                            <label class="form-check-label">Внутренний комментарий (виден только сотрудникам)</label>
+                        </div>
+                    {% endif %}
+                    <button type="submit" class="btn btn-primary btn-sm">Отправить</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card shadow-sm mb-3">
+            <div class="card-header">Параметры</div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item d-flex justify-content-between"><span>Категория</span><strong>{{ ticket.category.name }}</strong></li>
+                <li class="list-group-item d-flex justify-content-between"><span>Приоритет</span><strong>{{ ticket.priority.name }}</strong></li>
+                <li class="list-group-item d-flex justify-content-between"><span>Исполнитель</span><strong>{{ ticket.assignee|default:"—" }}</strong></li>
+                <li class="list-group-item d-flex justify-content-between"><span>Обновлена</span><strong>{{ ticket.updated_at|date:"d.m.Y H:i" }}</strong></li>
+                {% if ticket.closed_at %}
+                    <li class="list-group-item d-flex justify-content-between"><span>Закрыта</span><strong>{{ ticket.closed_at|date:"d.m.Y H:i" }}</strong></li>
+                {% endif %}
+            </ul>
+        </div>
+
+        {% if manage_form %}
+            <div class="card shadow-sm border-primary">
+                <div class="card-header bg-primary text-white">Обработка (агент)</div>
+                <div class="card-body">
+                    <form method="post" action="{% url 'ticket_manage' ticket.pk %}">
+                        {% csrf_token %}
+                        {% for field in manage_form %}
+                            <div class="mb-2">
+                                <label class="form-label small mb-0">{{ field.label }}</label>
+                                {{ field }}
+                            </div>
+                        {% endfor %}
+                        <button type="submit" class="btn btn-primary btn-sm w-100 mt-2">Применить</button>
+                    </form>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
