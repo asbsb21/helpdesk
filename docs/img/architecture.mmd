@@ -1,0 +1,13 @@
+flowchart LR
+    U["Браузер пользователя<br/>(Bootstrap 5)"]
+    subgraph Сервер["Сервер (Render)"]
+        V["Django<br/>views • формы • шаблоны"]
+        ADM["Django Admin<br/>(администрирование)"]
+        ORM["Django ORM"]
+    end
+    DB[("PostgreSQL")]
+    U -->|"HTTP-запрос"| V
+    V -->|"HTML-ответ"| U
+    V --> ORM
+    ADM --> ORM
+    ORM -->|"SQL"| DB

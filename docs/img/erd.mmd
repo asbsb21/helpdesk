@@ -1,0 +1,58 @@
+erDiagram
+    USER ||--o{ TICKET : "создаёт как автор"
+    USER ||--o{ TICKET : "назначается исполнителем"
+    CATEGORY ||--o{ TICKET : "группирует по категории"
+    STATUS ||--o{ TICKET : "задаёт статус"
+    PRIORITY ||--o{ TICKET : "задаёт приоритет"
+    TICKET ||--o{ COMMENT : "содержит переписку"
+    USER ||--o{ COMMENT : "оставляет комментарии"
+    TICKET }o--o{ TAG : "помечена метками"
+
+    USER {
+        int id PK
+        string username UK
+        string password "хеш"
+        string first_name
+        string last_name
+        string email
+        string role "client|agent|admin"
+    }
+    CATEGORY {
+        int id PK
+        string name UK
+    }
+    STATUS {
+        int id PK
+        string name UK
+        int order
+        bool is_closed
+    }
+    PRIORITY {
+        int id PK
+        string name UK
+        int weight
+    }
+    TAG {
+        int id PK
+        string name UK
+    }
+    TICKET {
+        int id PK
+        string title
+        text description
+        int author_id FK
+        int assignee_id FK
+        int category_id FK
+        int status_id FK
+        int priority_id FK
+        datetime created_at
+        datetime closed_at
+    }
+    COMMENT {
+        int id PK
+        int ticket_id FK
+        int author_id FK
+        text body
+        bool is_internal
+        datetime created_at
+    }
