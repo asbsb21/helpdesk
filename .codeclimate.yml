@@ -1,0 +1,15 @@
+version: "2"
+checks:
+  method-complexity:
+    config:
+      threshold: 10
+  file-lines:
+    config:
+      threshold: 300
+exclude_patterns:
+  - "**/migrations/"
+  - "**/tests.py"
+  - "config/settings.py"
+  - ".venv/"
+  - "**/static/"
+  - "manage.py"
