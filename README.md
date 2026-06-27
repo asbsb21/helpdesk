@@ -1,6 +1,6 @@
 # 🛠 Служба заявок (Help Desk)
 
-[![Maintainability](https://api.codeclimate.com/v1/badges/REPLACE_WITH_TOKEN/maintainability)](https://codeclimate.com/github/USERNAME/REPONAME/maintainability)
+[![Maintainability](https://qlty.sh/gh/asbsb21/projects/helpdesk/maintainability.svg)](https://qlty.sh/gh/asbsb21/projects/helpdesk)
 ![Django](https://img.shields.io/badge/Django-5.2-092E20?logo=django)
 ![Python](https://img.shields.io/badge/Python-3.12-3776AB?logo=python)
 
