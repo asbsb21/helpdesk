@@ -13,7 +13,7 @@
 доступа к данным.
 
 - 🔗 **Проект из каталога:** [project-based-learning → Build a Help Desk / Ticketing system](https://github.com/practical-tutorials/project-based-learning) *(укажите точный пункт каталога)*
-- 🌐 **Деплой:** `TODO: https://<app>.onrender.com` *(добавить после деплоя)*
+- 🌐 **Деплой:** https://helpdesk-zklq.onrender.com
 - 🎥 **Демонстрация:** GIF ниже ↓
 
 ## Демонстрация
